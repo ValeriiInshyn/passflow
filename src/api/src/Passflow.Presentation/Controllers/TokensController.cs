@@ -8,7 +8,7 @@ using Passflow.Infrastructure.Database;
 
 namespace Passflow.Presentation.Controllers;
 
-public class TokensController : Controller
+public class TokensController : BaseApiController
 {
     private readonly PassflowDbContext _context;
 
