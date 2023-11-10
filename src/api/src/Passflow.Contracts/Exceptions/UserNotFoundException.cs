@@ -8,5 +8,8 @@ namespace Passflow.Contracts.Exceptions
 {
     public class UserNotFoundException : ApiException
     {
+        public UserNotFoundException(string message) : base(message)
+        {
+        }
     }
 }

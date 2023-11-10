@@ -53,10 +53,10 @@ public class UsersController : BaseApiController
     [HttpGet("users/name={username}")]
     public async Task<IActionResult> GetUserByName([FromRoute] string username)
     {
-        var user = await _context.Users.SingleAsync(e => e.UserName == username);
+        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
 
         if (user == null)
-            throw new UserNotFoundException();
+            throw new UserNotFoundException($"User with name {username} not found!");
 
         var response = user.Adapt<UserDto>();
 
@@ -65,30 +65,31 @@ public class UsersController : BaseApiController
 
     [SwaggerOperation(
         Summary = "Create user",
-        Description = "Creates user using user's model",
-        OperationId = nameof(UserDto)
+        Description = "Creates user using user's model"
     )]
     [SwaggerResponse(
         StatusCodes.Status200OK,
         "User successfully loaded"
     )]
-    [HttpGet("users/create")]
+    [HttpPost("users/create")]
     public async Task<IActionResult> CreateUser(UserDto userDto)
     {
-        var user = await _context.Users.FirstAsync(e => e.UserName == userDto.UserName);
+        var user = await _context.Users.FirstOrDefaultAsync(e => e.UserName == userDto.UserName);
 
-        if (user == null)
-            throw new UserAlreadyExistsException();
+        if (user is not null)
+            throw new UserAlreadyExistsException($"User with name {userDto.UserName} already exist!");
 
-        var response = user.Adapt<UserDto>();
+        user = userDto.Adapt<User>();
 
-        return Ok(response);
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+
+        return Ok($"{userDto.UserName} successfully created!");
     }
 
     [SwaggerOperation(
         Summary = "Updates users model",
-        Description = "Gets user from users collection and updates user properties",
-        OperationId = nameof(UserDto)
+        Description = "Gets user from users collection and updates user properties"
     )]
     [SwaggerResponse(
         StatusCodes.Status200OK,
@@ -97,10 +98,10 @@ public class UsersController : BaseApiController
     [HttpPut("users/update")]
     public async Task<IActionResult> UpdateUser(UserDto userDto)
     {
-        var user = await _context.Users.SingleAsync(e => e.UserName == userDto.UserName);
+        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == userDto.UserName);
 
         if (user == null)
-            throw new UserNotFoundException();
+            throw new UserNotFoundException($"User with name {userDto.UserName} not found!");
 
         user = userDto.Adapt<User>();
 
@@ -115,8 +116,7 @@ public class UsersController : BaseApiController
 
     [SwaggerOperation(
         Summary = "Deletes users model",
-        Description = "Gets user from users collection and deletes him",
-        OperationId = nameof(UserDto)
+        Description = "Gets user from users collection and deletes him"
     )]
     [SwaggerResponse(
         StatusCodes.Status200OK,
@@ -125,10 +125,10 @@ public class UsersController : BaseApiController
     [HttpDelete("users/delete")]
     public async Task<IActionResult> DeleteUser(string username)
     {
-        var user = await _context.Users.SingleAsync(e => e.UserName == username);
+        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
 
         if (user == null)
-            throw new UserNotFoundException();
+            throw new UserNotFoundException($"User with name {username} not found!");
 
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();

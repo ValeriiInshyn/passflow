@@ -8,5 +8,8 @@ namespace Passflow.Contracts.Exceptions
 {
     public class TokenNotFoundException : ApiException
     {
+        public TokenNotFoundException(string message) : base(message)
+        {
+        }
     }
 }

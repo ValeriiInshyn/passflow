@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Passflow.Infrastructure.Database;
+using Passflow.Infrastructure.Middlewares;
 using Passflow.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,9 +21,10 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var dbContext = services.GetRequiredService<PassflowDbContext>();
     //await Task.Delay(15000);
-    dbContext.Database.Migrate();
+  //  dbContext.Database.Migrate();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
 

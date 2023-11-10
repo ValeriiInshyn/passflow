@@ -54,16 +54,39 @@ namespace Passflow.Presentation.Controllers
         [HttpGet("groups/name={groupname}")]
         public async Task<IActionResult> GetGroupByName([FromRoute] string groupname)
         {
-            var group = await _context.Groups.SingleAsync(e => e.GroupName == groupname);
+            var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupname);
 
             if (group == null)
-                throw new GroupNotFoundException();
+                throw new UserNotFoundException($"Group with name {groupname} not found!");
 
             var response = group.Adapt<GroupDto>();
 
             return Ok(response);
         }
 
+        [SwaggerOperation(
+            Summary = "Create group",
+            Description = "Creates group using group's model"
+        )]
+        [SwaggerResponse(
+            StatusCodes.Status200OK,
+            "Group successfully loaded"
+        )]
+        [HttpPost("groups/create")]
+        public async Task<IActionResult> CreateGroup(GroupDto groupDto)
+        {
+            var group = await _context.Groups.FirstOrDefaultAsync(e => e.GroupName == groupDto.GroupName);
+
+            if (group is not null)
+                throw new UserAlreadyExistsException($"Group with name {groupDto.GroupName} already exist!");
+
+            group = groupDto.Adapt<Group>();
+
+            await _context.Groups.AddAsync(group);
+            await _context.SaveChangesAsync();
+
+            return Ok($"{groupDto.GroupName} successfully created!");
+        }
 
 
         [SwaggerOperation(
@@ -78,10 +101,10 @@ namespace Passflow.Presentation.Controllers
         [HttpPut("groups/update")]
         public async Task<IActionResult> Updategroup(GroupDto groupDto)
         {
-            var group = await _context.Groups.SingleAsync(e => e.GroupName == groupDto.GroupName);
+            var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupDto.GroupName);
 
             if (group == null)
-                throw new GroupNotFoundException();
+                throw new UserNotFoundException($"Group with name {groupDto.GroupName} not found!");
 
             group = groupDto.Adapt<Group>();
 
@@ -99,15 +122,15 @@ namespace Passflow.Presentation.Controllers
         )]
         [SwaggerResponse(
             StatusCodes.Status200OK,
-            "group successfully deleted"
+            "Group successfully deleted"
         )]
         [HttpDelete("groups/delete")]
         public async Task<IActionResult> Deletegroup(string groupname)
         {
-            var group = await _context.Groups.SingleAsync(e => e.GroupName == groupname);
+            var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupname);
 
-            if (group == null)
-                throw new GroupNotFoundException();
+            if (group is null)
+                throw new GroupNotFoundException($"Group with name {groupname} not found!");
 
             _context.Groups.Remove(group);
             await _context.SaveChangesAsync();

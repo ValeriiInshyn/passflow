@@ -8,5 +8,8 @@ namespace Passflow.Contracts.Exceptions
 {
     public class GroupNotFoundException : ApiException
     {
+        public GroupNotFoundException(string message) : base(message)
+        {
+        }
     }
 }
