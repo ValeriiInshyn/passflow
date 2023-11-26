@@ -12,8 +12,8 @@ using Passflow.Infrastructure.Database;
 namespace Passflow.Infrastructure.Migrations
 {
     [DbContext(typeof(PassflowDbContext))]
-    [Migration("20231106214733_Init")]
-    partial class Init
+    [Migration("20231126202744_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
