@@ -30,7 +30,8 @@ namespace Passflow.Presentation.Controllers
         )]
         [SwaggerResponse(
             StatusCodes.Status200OK,
-            "All groups successfully loaded"
+            "All groups successfully loaded",
+            typeof(List<GroupDto>)
         )]
         [HttpGet]
         public async Task<IActionResult> GetAllgroups()
@@ -49,8 +50,9 @@ namespace Passflow.Presentation.Controllers
         )]
         [SwaggerResponse(
             StatusCodes.Status200OK,
-            "group successfully loaded"
-        )]
+            "group successfully loaded",
+            typeof(GroupDto)
+		)]
         [HttpGet("name={groupname}")]
         public async Task<IActionResult> GetGroupByName([FromRoute] string groupname)
         {
@@ -70,7 +72,8 @@ namespace Passflow.Presentation.Controllers
         )]
         [SwaggerResponse(
             StatusCodes.Status200OK,
-            "Group successfully loaded"
+            "Group successfully loaded",
+            typeof(string)
         )]
         [HttpPost("create")]
         public async Task<IActionResult> CreateGroup(GroupDto groupDto)
@@ -96,7 +99,8 @@ namespace Passflow.Presentation.Controllers
         )]
         [SwaggerResponse(
             StatusCodes.Status200OK,
-            "group successfully updated"
+            "group successfully updated",
+            typeof(GroupDto)
         )]
         [HttpPut("update")]
         public async Task<IActionResult> Updategroup(GroupDto groupDto)
@@ -122,7 +126,8 @@ namespace Passflow.Presentation.Controllers
         )]
         [SwaggerResponse(
             StatusCodes.Status200OK,
-            "Group successfully deleted"
+            "Group successfully deleted",
+            typeof(string)
         )]
         [HttpDelete("delete")]
         public async Task<IActionResult> Deletegroup(string groupname)
@@ -148,7 +153,8 @@ namespace Passflow.Presentation.Controllers
         )]
         [SwaggerResponse(
             StatusCodes.Status200OK,
-            "groups successfully loaded"
+            "groups successfully loaded",
+            typeof(List<GroupDto>)
         )]
         [HttpGet("skip={skip}take={take}")]
         public async Task<IActionResult> Paginate([FromRoute] int skip, [FromRoute] int take)

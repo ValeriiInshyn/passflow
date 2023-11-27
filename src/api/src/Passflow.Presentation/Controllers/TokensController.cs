@@ -5,6 +5,7 @@ using Passflow.Contracts.Dtos.Token;
 using Passflow.Contracts.Exceptions;
 using Passflow.Domain;
 using Passflow.Infrastructure.Database;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Passflow.Presentation.Controllers;
 
@@ -16,8 +17,11 @@ public class TokensController : BaseApiController
     {
         _context = context;
     }
-
-    [HttpPost("create")]
+    [SwaggerResponse(
+	    StatusCodes.Status200OK,
+	    "Token successfully created"
+    )]
+	[HttpPost("create")]
     public async Task<IActionResult> CreateTokenForUser(TokenCreateDto tokenDto, string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
@@ -29,11 +33,15 @@ public class TokensController : BaseApiController
         token.UserId = user.Id;
         await _context.Tokens.AddAsync(token);
 
-        return Ok(tokenDto);
+        return Ok();
     }
+    [SwaggerResponse(
+	    StatusCodes.Status200OK,
+	    "Token successfully created",
+        typeof(List<TokenDto>)
+    )]
 
-
-    [HttpGet]
+	[HttpGet]
     public async Task<IActionResult> GetAllTokensForAuthenticateUser()
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == "username");
@@ -45,8 +53,12 @@ public class TokensController : BaseApiController
 
         return Ok(tokens);
     }
-
-    [HttpGet("token-name={tokenName}")]
+    [SwaggerResponse(
+	    StatusCodes.Status200OK,
+	    "Token successfully created",
+	    typeof(TokenDto)
+    )]
+	[HttpGet("token-name={tokenName}")]
     public async Task<IActionResult> GetTokenByName(string tokenname, string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);

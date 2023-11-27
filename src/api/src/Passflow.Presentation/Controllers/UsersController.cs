@@ -28,7 +28,8 @@ public class UsersController : BaseApiController
     )]
     [SwaggerResponse(
         StatusCodes.Status200OK,
-        "All users successfully loaded"
+        "All users successfully loaded",
+        typeof(List<UserDto>)
     )]
 
     [HttpGet]
@@ -48,7 +49,8 @@ public class UsersController : BaseApiController
     )]
     [SwaggerResponse(
         StatusCodes.Status200OK,
-        "User successfully loaded"
+        "User successfully loaded",
+        typeof(UserDto)
     )]
     [HttpGet("name={username}")]
     public async Task<IActionResult> GetUserByName([FromRoute] string username)
@@ -69,7 +71,8 @@ public class UsersController : BaseApiController
     )]
     [SwaggerResponse(
         StatusCodes.Status200OK,
-        "User successfully loaded"
+        "User successfully loaded",
+        typeof(string)
     )]
     [HttpPost("create")]
     public async Task<IActionResult> CreateUser(UserCreateDto userDto)
@@ -91,7 +94,8 @@ public class UsersController : BaseApiController
     )]
     [SwaggerResponse(
         StatusCodes.Status200OK,
-        "User successfully updated"
+        "User successfully updated",
+        typeof(UserDto)
     )]
     [HttpPut("update")]
     public async Task<IActionResult> UpdateUser(UserDto userDto)
@@ -118,7 +122,8 @@ public class UsersController : BaseApiController
     )]
     [SwaggerResponse(
         StatusCodes.Status200OK,
-        "User successfully deleted"
+        "User successfully deleted",
+        typeof(string)
     )]
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteUser(string username)
@@ -144,8 +149,9 @@ public class UsersController : BaseApiController
     )]
     [SwaggerResponse(
         StatusCodes.Status200OK,
-        "Users successfully loaded"
-    )]
+        "Users successfully loaded",
+        typeof(List<UserDto>)
+	)]
     [HttpGet("skip={skip}take={take}")]
     public async Task<IActionResult> Paginate([FromRoute]int skip, [FromRoute] int take)
     {
