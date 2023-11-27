@@ -31,7 +31,7 @@ public class UsersController : BaseApiController
         "All users successfully loaded"
     )]
 
-    [HttpGet("users")]
+    [HttpGet]
     public async Task<IActionResult> GetAllUsers()
     {
         var users = (await _context.Users.ToListAsync()).Adapt<List<UserDto>>();
@@ -50,7 +50,7 @@ public class UsersController : BaseApiController
         StatusCodes.Status200OK,
         "User successfully loaded"
     )]
-    [HttpGet("users/name={username}")]
+    [HttpGet("name={username}")]
     public async Task<IActionResult> GetUserByName([FromRoute] string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
@@ -71,17 +71,15 @@ public class UsersController : BaseApiController
         StatusCodes.Status200OK,
         "User successfully loaded"
     )]
-    [HttpPost("users/create")]
-    public async Task<IActionResult> CreateUser(UserDto userDto)
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateUser(UserCreateDto userDto)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(e => e.UserName == userDto.UserName);
-
+        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == userDto.UserName);
         if (user is not null)
             throw new UserAlreadyExistsException($"User with name {userDto.UserName} already exist!");
 
         user = userDto.Adapt<User>();
-
-        await _context.Users.AddAsync(user);
+		await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
 
         return Ok($"{userDto.UserName} successfully created!");
@@ -95,7 +93,7 @@ public class UsersController : BaseApiController
         StatusCodes.Status200OK,
         "User successfully updated"
     )]
-    [HttpPut("users/update")]
+    [HttpPut("update")]
     public async Task<IActionResult> UpdateUser(UserDto userDto)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == userDto.UserName);
@@ -122,7 +120,7 @@ public class UsersController : BaseApiController
         StatusCodes.Status200OK,
         "User successfully deleted"
     )]
-    [HttpDelete("users/delete")]
+    [HttpDelete("delete")]
     public async Task<IActionResult> DeleteUser(string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
@@ -148,7 +146,7 @@ public class UsersController : BaseApiController
         StatusCodes.Status200OK,
         "Users successfully loaded"
     )]
-    [HttpGet("users/skip={skip}take={take}")]
+    [HttpGet("skip={skip}take={take}")]
     public async Task<IActionResult> Paginate([FromRoute]int skip, [FromRoute] int take)
     {
         var users = (await _context.Users.Skip(skip).Take(take).ToListAsync()).Adapt<List<UserDto>>();

@@ -17,7 +17,7 @@ public class TokensController : BaseApiController
         _context = context;
     }
 
-    [HttpPost("tokens/create")]
+    [HttpPost("create")]
     public async Task<IActionResult> CreateTokenForUser(TokenCreateDto tokenDto, string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
@@ -33,7 +33,7 @@ public class TokensController : BaseApiController
     }
 
 
-    [HttpGet("tokens")]
+    [HttpGet]
     public async Task<IActionResult> GetAllTokensForAuthenticateUser()
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == "username");
@@ -46,7 +46,7 @@ public class TokensController : BaseApiController
         return Ok(tokens);
     }
 
-    [HttpGet("tokens/token-name={tokenName}")]
+    [HttpGet("token-name={tokenName}")]
     public async Task<IActionResult> GetTokenByName(string tokenname, string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);

@@ -1,37 +1,40 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Passflow.Domain.Settings;
 using Passflow.Infrastructure.Database;
 using Passflow.Infrastructure.Middlewares;
+using Passflow.Infrastructure.Services;
 using Passflow.Presentation;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSerilog(builder.Configuration);
-
+builder.Services.AddConfigs(builder.Configuration);
 builder.Services.AddSingleton(Log.Logger);
 
-// Add services to the container.
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger(builder.Configuration);
-
+builder.Services.AddServices();
 builder.Host.UseSerilog();
-
+builder.Services.AddCustomAuthentication(builder.Configuration);
 var app = builder.Build();
 
 
-using (var scope = app.Services.CreateScope())
+await using (var scope = app.Services.CreateAsyncScope())
 {
-    var services = scope.ServiceProvider;
-    var dbContext = services.GetRequiredService<PassflowDbContext>();
-    //await Task.Delay(15000);
-  //  dbContext.Database.Migrate();
+	var services = scope.ServiceProvider;
+	await using var dbContext = services.GetRequiredService<PassflowDbContext>();
+	await dbContext.Database.MigrateAsync();
+	await dbContext.SeedDataAsync();
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
 

@@ -1,5 +1,6 @@
 ﻿using Azure;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Passflow.Contracts.Dtos;
@@ -31,8 +32,7 @@ namespace Passflow.Presentation.Controllers
             StatusCodes.Status200OK,
             "All groups successfully loaded"
         )]
-
-        [HttpGet("groups")]
+        [HttpGet]
         public async Task<IActionResult> GetAllgroups()
         {
             var groups = (await _context.Groups.ToListAsync()).Adapt<List<GroupDto>>();
@@ -51,7 +51,7 @@ namespace Passflow.Presentation.Controllers
             StatusCodes.Status200OK,
             "group successfully loaded"
         )]
-        [HttpGet("groups/name={groupname}")]
+        [HttpGet("name={groupname}")]
         public async Task<IActionResult> GetGroupByName([FromRoute] string groupname)
         {
             var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupname);
@@ -72,7 +72,7 @@ namespace Passflow.Presentation.Controllers
             StatusCodes.Status200OK,
             "Group successfully loaded"
         )]
-        [HttpPost("groups/create")]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateGroup(GroupDto groupDto)
         {
             var group = await _context.Groups.FirstOrDefaultAsync(e => e.GroupName == groupDto.GroupName);
@@ -98,7 +98,7 @@ namespace Passflow.Presentation.Controllers
             StatusCodes.Status200OK,
             "group successfully updated"
         )]
-        [HttpPut("groups/update")]
+        [HttpPut("update")]
         public async Task<IActionResult> Updategroup(GroupDto groupDto)
         {
             var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupDto.GroupName);
@@ -124,7 +124,7 @@ namespace Passflow.Presentation.Controllers
             StatusCodes.Status200OK,
             "Group successfully deleted"
         )]
-        [HttpDelete("groups/delete")]
+        [HttpDelete("delete")]
         public async Task<IActionResult> Deletegroup(string groupname)
         {
             var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupname);
@@ -150,7 +150,7 @@ namespace Passflow.Presentation.Controllers
             StatusCodes.Status200OK,
             "groups successfully loaded"
         )]
-        [HttpGet("groups/skip={skip}take={take}")]
+        [HttpGet("skip={skip}take={take}")]
         public async Task<IActionResult> Paginate([FromRoute] int skip, [FromRoute] int take)
         {
             var groups = (await _context.Groups.Skip(skip).Take(take).ToListAsync()).Adapt<List<GroupDto>>();

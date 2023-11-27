@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passflow.Contracts", "Passf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPF-app", "..\..\wpf\src\WPF-app.csproj", "{95B4CFCC-ADA5-498F-B3B9-44FFDEAC044B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passflow.Application", "Passflow.Application\Passflow.Application.csproj", "{66D0010C-3565-4D64-B696-0DAEF733C753}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{95B4CFCC-ADA5-498F-B3B9-44FFDEAC044B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95B4CFCC-ADA5-498F-B3B9-44FFDEAC044B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95B4CFCC-ADA5-498F-B3B9-44FFDEAC044B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66D0010C-3565-4D64-B696-0DAEF733C753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66D0010C-3565-4D64-B696-0DAEF733C753}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66D0010C-3565-4D64-B696-0DAEF733C753}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66D0010C-3565-4D64-B696-0DAEF733C753}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
