@@ -25,7 +25,7 @@ namespace WPF_app.Models
             }
         }
 
-        private const string ApiBaseUrl = "https://your-api-base-url.com/api/tokens";
+        private const string ApiBaseUrl = "https://localhost:7267/";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -63,7 +63,7 @@ namespace WPF_app.Models
             {
                 using (var client = new HttpClient())
                 {
-                    var response = await client.GetStringAsync(ApiBaseUrl);
+                    var response = await client.GetStringAsync(ApiBaseUrl + "tokens");
                     Tokens = JsonConvert.DeserializeObject<ObservableCollection<TokenDto>>(response);
                 }
             }

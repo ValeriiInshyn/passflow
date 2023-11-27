@@ -3,7 +3,7 @@
 
 namespace Passflow.Contracts.Dtos.Token
 {
-    public class CreateTokenDto
+    public class TokenCreateDto
     {
 
         [SwaggerSchema("The token's name.")]

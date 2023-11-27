@@ -18,7 +18,7 @@ public class TokensController : BaseApiController
     }
 
     [HttpPost("tokens/create")]
-    public async Task<IActionResult> CreateTokenForUser(CreateTokenDto tokenDto, string username)
+    public async Task<IActionResult> CreateTokenForUser(TokenCreateDto tokenDto, string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
 
@@ -33,13 +33,13 @@ public class TokensController : BaseApiController
     }
 
 
-    [HttpGet("tokens/username={username}")]
-    public async Task<IActionResult> GetAllTokensForUser(string username)
+    [HttpGet("tokens")]
+    public async Task<IActionResult> GetAllTokensForAuthenticateUser()
     {
-        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
+        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == "username");
 
         if (user == null)
-            throw new UserNotFoundException($"User with name {username} not found!");
+            throw new UserNotFoundException($"User with name {"username"} not found!");
 
         var tokens = (await _context.Tokens.Where(e => e.UserId == user.Id).ToListAsync()).Adapt<List<TokenDto>>();
 
