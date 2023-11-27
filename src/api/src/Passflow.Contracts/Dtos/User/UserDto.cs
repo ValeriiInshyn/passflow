@@ -23,4 +23,7 @@ public sealed record UserDto
 
     [SwaggerSchema("The user's hash password.")]
     public string PasswordHash { get; set; } = null!;
+
+    [SwaggerSchema("The user's property to identify is user admin.")]
+    public bool IsAdmin { get; set; }
 }

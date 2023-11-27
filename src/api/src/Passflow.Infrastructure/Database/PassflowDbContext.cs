@@ -14,8 +14,6 @@ public partial class PassflowDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Admin> Admins { get; set; }
-
     public virtual DbSet<Group> Groups { get; set; }
 
     public virtual DbSet<Token> Tokens { get; set; }
@@ -26,14 +24,6 @@ public partial class PassflowDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Admin>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK_AdminId");
-
-            entity.Property(e => e.Email).HasMaxLength(100);
-            entity.Property(e => e.PasswordHash).HasMaxLength(128);
-            entity.Property(e => e.UserName).HasMaxLength(50);
-        });
 
         modelBuilder.Entity<Group>(entity =>
         {

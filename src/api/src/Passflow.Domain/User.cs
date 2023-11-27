@@ -19,5 +19,7 @@ public partial class User
 
     public string PasswordHash { get; set; } = null!;
 
+    public bool IsAdmin { get; set; }
+
     public virtual ICollection<Token> Tokens { get; set; } = new List<Token>();
 }
