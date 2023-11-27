@@ -1,7 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Passflow.Contracts.Dtos;
+using Passflow.Contracts.Dtos.Token;
 using Passflow.Contracts.Exceptions;
 using Passflow.Domain;
 using Passflow.Infrastructure.Database;
@@ -18,7 +18,7 @@ public class TokensController : BaseApiController
     }
 
     [HttpPost("tokens/create")]
-    public async Task<IActionResult> CreateTokenForUser(TokenDto tokenDto, string username)
+    public async Task<IActionResult> CreateTokenForUser(CreateTokenDto tokenDto, string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
 

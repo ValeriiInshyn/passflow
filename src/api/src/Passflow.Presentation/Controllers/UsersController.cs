@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Passflow.Infrastructure.Database;
 using Mapster;
-using Passflow.Contracts.Dtos;
 using Passflow.Contracts.Exceptions;
 using Passflow.Domain;
 using Swashbuckle.AspNetCore.Annotations;
+using Passflow.Contracts.Dtos.User;
 
 namespace Passflow.Presentation.Controllers;
 
