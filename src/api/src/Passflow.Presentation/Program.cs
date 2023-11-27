@@ -1,9 +1,15 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Passflow.Infrastructure.Database;
 using Passflow.Infrastructure.Middlewares;
 using Passflow.Presentation;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSerilog(builder.Configuration);
+
+builder.Services.AddSingleton(Log.Logger);
 
 // Add services to the container.
 builder.Services.AddDatabase(builder.Configuration);
@@ -12,6 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwagger(builder.Configuration);
 
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 

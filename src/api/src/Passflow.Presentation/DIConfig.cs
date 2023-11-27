@@ -3,6 +3,7 @@ using Asp.Versioning.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Passflow.Infrastructure.Database;
+using Serilog;
 using System.Reflection;
 
 namespace Passflow.Presentation
@@ -21,6 +22,16 @@ namespace Passflow.Presentation
             return services;
         }
 
+        #region Logger
+
+        public static void AddSerilog(this IServiceCollection services, IConfiguration configuration)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+        }
+
+        #endregion
         public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSwaggerGen(options =>

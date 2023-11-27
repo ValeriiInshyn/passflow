@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
 using WPF_app.Helpers;
+using WPF_app.Pages;
 
 namespace WPF_app.Models
 {
@@ -50,9 +51,9 @@ namespace WPF_app.Models
             if (IsValidUser(Username, Password))
             {
                 // Navigate to the dashboard view
-                var dashboardViewModel = new DashboardViewModel();
-                var dashboardView = new DashboardView { DataContext = dashboardViewModel };
-                dashboardView.Show();
+                var tokenManagementViewModel = new TokenManagementViewModel();
+                var tokenManagementView = new TokenManagementView() { DataContext = tokenManagementViewModel };
+                tokenManagementView.Show();
 
                 // Close the login view
                 (parameter as System.Windows.Window)?.Close();

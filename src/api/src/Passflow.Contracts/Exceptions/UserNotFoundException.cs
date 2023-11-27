@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Passflow.Contracts.Exceptions
 {
     public class UserNotFoundException : ApiException
     {
-        public UserNotFoundException(string message) : base(message)
+        public UserNotFoundException(string message) : base(message, 400, LogEventLevel.Error)
         {
         }
     }
