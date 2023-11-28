@@ -27,7 +27,6 @@ public class TokenService:ITokenService
                 new(ClaimTypes.Name, username),
                 new(ClaimTypes.Role,role)
             }),
-            Issuer = _jwtAuthSettings.Issuer,
             IssuedAt = DateTime.UtcNow,
             TokenType = JwtBearerDefaults.AuthenticationScheme,
             Expires = DateTime.UtcNow.AddMinutes(_jwtAuthSettings.AccessTokenLifetimeInMinutes),
@@ -60,9 +59,8 @@ public class TokenService:ITokenService
         return new TokenValidationParameters
         {
             IssuerSigningKey = GetSymmetricSecurityKey(settings.AccessSecret),
+
             ClockSkew = TimeSpan.FromSeconds(30),
-            ValidIssuer = settings.Issuer,
-            ValidateIssuer = true,
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
         };

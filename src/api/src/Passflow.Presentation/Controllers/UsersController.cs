@@ -7,9 +7,10 @@ using Passflow.Contracts.Exceptions;
 using Passflow.Domain;
 using Swashbuckle.AspNetCore.Annotations;
 using Passflow.Contracts.Dtos.User;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Passflow.Presentation.Controllers;
-
+[Authorize]
 public class UsersController : BaseApiController
 {
     private readonly PassflowDbContext _context;
@@ -44,15 +45,14 @@ public class UsersController : BaseApiController
 
     [SwaggerOperation(
         Summary = "Gets user by name",
-        Description = "Gets one user from users collection by it's unique username",
-        OperationId = nameof(UserDto)
+        Description = "Gets one user from users collection by it's unique username"
     )]
     [SwaggerResponse(
         StatusCodes.Status200OK,
         "User successfully loaded",
         typeof(UserDto)
     )]
-    [HttpGet("name={username}")]
+    [HttpGet("{username}")]
     public async Task<IActionResult> GetUserByNameAsync([FromRoute] string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
@@ -125,7 +125,7 @@ public class UsersController : BaseApiController
         "User successfully deleted",
         typeof(string)
     )]
-    [HttpDelete("delete")]
+    [HttpDelete("{username}")]
     public async Task<IActionResult> DeleteUserAsync(string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
@@ -152,8 +152,8 @@ public class UsersController : BaseApiController
         "Users successfully loaded",
         typeof(List<UserDto>)
 	)]
-    [HttpGet("skip={skip}take={take}")]
-    public async Task<IActionResult> PaginateUsersAsync([FromRoute]int skip, [FromRoute] int take)
+    [HttpGet("{skip:int}/{take:int}")]
+	public async Task<IActionResult> PaginateUsersAsync([FromRoute]int skip, [FromRoute] int take)
     {
         var users = (await _context.Users.Skip(skip).Take(take).ToListAsync()).Adapt<List<UserDto>>();
 

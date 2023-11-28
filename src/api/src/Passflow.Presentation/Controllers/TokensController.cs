@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Passflow.Contracts.Dtos.Token;
@@ -8,7 +9,7 @@ using Passflow.Infrastructure.Database;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Passflow.Presentation.Controllers;
-
+[Authorize]
 public class TokensController : BaseApiController
 {
     private readonly PassflowDbContext _context;
@@ -58,7 +59,7 @@ public class TokensController : BaseApiController
 	    "Token successfully created",
 	    typeof(TokenDto)
     )]
-	[HttpGet("token-name={tokenName}")]
+	[HttpGet("{tokenName}")]
     public async Task<IActionResult> GetTokenByNameAsync(string tokenName)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == GetAuthUserName());

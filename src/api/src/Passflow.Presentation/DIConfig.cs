@@ -65,7 +65,6 @@ public static class DIConfig
 			options.OrderActionsBy(apiDesc =>
 				$"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}_{apiDesc.RelativePath}");
 
-			// options.SchemaFilter<EnumSchemaFilter>();
 			options.UseInlineDefinitionsForEnums();
 			options.OperationFilter<MethodNameAsOperationIdFilter>();
 			options.SupportNonNullableReferenceTypes(); // Sets Nullable flags appropriately.              
@@ -85,7 +84,6 @@ public static class DIConfig
 		{
 			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-			options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 		}).AddJwtBearer(o =>
 		{
 			var jwtAuthSettings = configuration.GetRequiredSection(nameof(JwtAuthSettings)).Get<JwtAuthSettings>();
