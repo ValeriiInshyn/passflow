@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Newtonsoft.Json;
-using WPF_app.Dtos;
 using WPF_app.Helpers;
 using WPF_app.Nswag;
+using WPFApp.Nswag;
 
 namespace WPF_app.Models
 {
@@ -62,11 +63,9 @@ namespace WPF_app.Models
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    var response = await client.GetStringAsync(ApiBaseUrl + "tokens");
-                    Tokens = JsonConvert.DeserializeObject<ObservableCollection<TokenDto>>(response);
-                }
+                var response = await ApiClient.Instance.GetAllUserTokensAsync();
+                Tokens = (ObservableCollection<TokenDto>)response;
+
             }
             catch (Exception ex)
             {

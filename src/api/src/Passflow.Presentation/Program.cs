@@ -28,8 +28,8 @@ await using (var scope = app.Services.CreateAsyncScope())
 {
 	var services = scope.ServiceProvider;
 	await using var dbContext = services.GetRequiredService<PassflowDbContext>();
-	await dbContext.Database.MigrateAsync();
-	await dbContext.SeedDataAsync();
+	//await dbContext.Database.MigrateAsync();
+	//await dbContext.SeedDataAsync();
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
