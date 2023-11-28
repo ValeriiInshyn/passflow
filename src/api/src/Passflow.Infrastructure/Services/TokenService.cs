@@ -59,7 +59,8 @@ public class TokenService:ITokenService
         return new TokenValidationParameters
         {
             IssuerSigningKey = GetSymmetricSecurityKey(settings.AccessSecret),
-
+            ValidateAudience = false,
+            ValidateIssuer = false,
             ClockSkew = TimeSpan.FromSeconds(30),
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
@@ -105,7 +106,9 @@ public class TokenService:ITokenService
         return new TokenValidationParameters
         {
             IssuerSigningKey = GetSymmetricSecurityKey(settings.RefreshSecret),
-            ClockSkew = TimeSpan.FromSeconds(30),
+            ValidateAudience = false,
+            ValidateIssuer = false,
+			ClockSkew = TimeSpan.FromSeconds(30),
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
         };

@@ -10,7 +10,7 @@ using WPFApp.Nswag;
 namespace WPF_app.Nswag;
 public class ApiClient : NswagClient
 {
-	public static NswagClient Instance { get; private set; } = new(BaseUrl, new HttpClient());
+	public static ApiClient Instance { get; private set; } = new(BaseUrl, new HttpClient());
 	private const string BaseUrl = "https://localhost:7267";
 	private string? _refreshToken;
 	public string? UserName { get; private set; }
@@ -22,7 +22,7 @@ public class ApiClient : NswagClient
 			new AuthenticationHeaderValue("Bearer", loginResponse.AccessToken);
 		_refreshToken = loginResponse.RefreshToken;
 		UserName = body.UserName;
-		Instance = new NswagClient(BaseUrl, httpClient);
+		Instance = new ApiClient(BaseUrl, httpClient);
 		return loginResponse;
 	}
 

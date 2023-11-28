@@ -178,13 +178,12 @@ namespace WPFApp.Nswag
 		/// <exception cref="ApiException">A server side error occurred.</exception>
 		public virtual async System.Threading.Tasks.Task<string> DeleteGroupAsync(string groupName, System.Threading.CancellationToken cancellationToken)
 		{
+			if (groupName == null)
+				throw new System.ArgumentNullException("groupName");
+
 			var urlBuilder_ = new System.Text.StringBuilder();
-			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/groups/delete?");
-			if (groupName != null)
-			{
-				urlBuilder_.Append(System.Uri.EscapeDataString("groupName") + "=").Append(System.Uri.EscapeDataString(ConvertToString(groupName, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-			}
-			urlBuilder_.Length--;
+			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/groups/{groupName}");
+			urlBuilder_.Replace("{groupName}", System.Uri.EscapeDataString(ConvertToString(groupName, System.Globalization.CultureInfo.InvariantCulture)));
 
 			var client_ = _httpClient;
 			var disposeClient_ = false;
@@ -219,6 +218,96 @@ namespace WPFApp.Nswag
 						if (status_ == 200)
 						{
 							var objectResponse_ = await ReadObjectResponseAsync<string>(response_, headers_, cancellationToken).ConfigureAwait(false);
+							if (objectResponse_.Object == null)
+							{
+								throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+							}
+							return objectResponse_.Object;
+						}
+						else
+						{
+							var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+							throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+						}
+					}
+					finally
+					{
+						if (disposeResponse_)
+							response_.Dispose();
+					}
+				}
+			}
+			finally
+			{
+				if (disposeClient_)
+					client_.Dispose();
+			}
+		}
+
+		/// <summary>
+		/// Gets group by name
+		/// </summary>
+		/// <remarks>
+		/// Gets one group from groups collection by it's unique groupName
+		/// </remarks>
+		/// <returns>group successfully loaded</returns>
+		/// <exception cref="ApiException">A server side error occurred.</exception>
+		public virtual System.Threading.Tasks.Task<GroupDto> GetGroupByNameAsync(string groupName)
+		{
+			return GetGroupByNameAsync(groupName, System.Threading.CancellationToken.None);
+		}
+
+		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <summary>
+		/// Gets group by name
+		/// </summary>
+		/// <remarks>
+		/// Gets one group from groups collection by it's unique groupName
+		/// </remarks>
+		/// <returns>group successfully loaded</returns>
+		/// <exception cref="ApiException">A server side error occurred.</exception>
+		public virtual async System.Threading.Tasks.Task<GroupDto> GetGroupByNameAsync(string groupName, System.Threading.CancellationToken cancellationToken)
+		{
+			if (groupName == null)
+				throw new System.ArgumentNullException("groupName");
+
+			var urlBuilder_ = new System.Text.StringBuilder();
+			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/groups/{groupName}");
+			urlBuilder_.Replace("{groupName}", System.Uri.EscapeDataString(ConvertToString(groupName, System.Globalization.CultureInfo.InvariantCulture)));
+
+			var client_ = _httpClient;
+			var disposeClient_ = false;
+			try
+			{
+				using (var request_ = new System.Net.Http.HttpRequestMessage())
+				{
+					request_.Method = new System.Net.Http.HttpMethod("GET");
+					request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+					PrepareRequest(client_, request_, urlBuilder_);
+
+					var url_ = urlBuilder_.ToString();
+					request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+					PrepareRequest(client_, request_, url_);
+
+					var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+					var disposeResponse_ = true;
+					try
+					{
+						var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+						if (response_.Content != null && response_.Content.Headers != null)
+						{
+							foreach (var item_ in response_.Content.Headers)
+								headers_[item_.Key] = item_.Value;
+						}
+
+						ProcessResponse(client_, response_);
+
+						var status_ = (int)response_.StatusCode;
+						if (status_ == 200)
+						{
+							var objectResponse_ = await ReadObjectResponseAsync<GroupDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
 							if (objectResponse_.Object == null)
 							{
 								throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -332,96 +421,6 @@ namespace WPFApp.Nswag
 		}
 
 		/// <summary>
-		/// Gets group by name
-		/// </summary>
-		/// <remarks>
-		/// Gets one group from groups collection by it's unique groupName
-		/// </remarks>
-		/// <returns>group successfully loaded</returns>
-		/// <exception cref="ApiException">A server side error occurred.</exception>
-		public virtual System.Threading.Tasks.Task<GroupDto> GetGroupByNameAsync(string groupname)
-		{
-			return GetGroupByNameAsync(groupname, System.Threading.CancellationToken.None);
-		}
-
-		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-		/// <summary>
-		/// Gets group by name
-		/// </summary>
-		/// <remarks>
-		/// Gets one group from groups collection by it's unique groupName
-		/// </remarks>
-		/// <returns>group successfully loaded</returns>
-		/// <exception cref="ApiException">A server side error occurred.</exception>
-		public virtual async System.Threading.Tasks.Task<GroupDto> GetGroupByNameAsync(string groupname, System.Threading.CancellationToken cancellationToken)
-		{
-			if (groupname == null)
-				throw new System.ArgumentNullException("groupname");
-
-			var urlBuilder_ = new System.Text.StringBuilder();
-			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/groups/name={groupName}");
-			urlBuilder_.Replace("{groupname}", System.Uri.EscapeDataString(ConvertToString(groupname, System.Globalization.CultureInfo.InvariantCulture)));
-
-			var client_ = _httpClient;
-			var disposeClient_ = false;
-			try
-			{
-				using (var request_ = new System.Net.Http.HttpRequestMessage())
-				{
-					request_.Method = new System.Net.Http.HttpMethod("GET");
-					request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-					PrepareRequest(client_, request_, urlBuilder_);
-
-					var url_ = urlBuilder_.ToString();
-					request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-					PrepareRequest(client_, request_, url_);
-
-					var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-					var disposeResponse_ = true;
-					try
-					{
-						var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-						if (response_.Content != null && response_.Content.Headers != null)
-						{
-							foreach (var item_ in response_.Content.Headers)
-								headers_[item_.Key] = item_.Value;
-						}
-
-						ProcessResponse(client_, response_);
-
-						var status_ = (int)response_.StatusCode;
-						if (status_ == 200)
-						{
-							var objectResponse_ = await ReadObjectResponseAsync<GroupDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
-							if (objectResponse_.Object == null)
-							{
-								throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-							}
-							return objectResponse_.Object;
-						}
-						else
-						{
-							var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-							throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-						}
-					}
-					finally
-					{
-						if (disposeResponse_)
-							response_.Dispose();
-					}
-				}
-			}
-			finally
-			{
-				if (disposeClient_)
-					client_.Dispose();
-			}
-		}
-
-		/// <summary>
 		/// Paginates groups collection
 		/// </summary>
 		/// <remarks>
@@ -452,7 +451,7 @@ namespace WPFApp.Nswag
 				throw new System.ArgumentNullException("take");
 
 			var urlBuilder_ = new System.Text.StringBuilder();
-			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/groups/skip={skip}take={take}");
+			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/groups/{skip}/{take}");
 			urlBuilder_.Replace("{skip}", System.Uri.EscapeDataString(ConvertToString(skip, System.Globalization.CultureInfo.InvariantCulture)));
 			urlBuilder_.Replace("{take}", System.Uri.EscapeDataString(ConvertToString(take, System.Globalization.CultureInfo.InvariantCulture)));
 
@@ -785,7 +784,7 @@ namespace WPFApp.Nswag
 				throw new System.ArgumentNullException("tokenName");
 
 			var urlBuilder_ = new System.Text.StringBuilder();
-			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/tokens/token-name={tokenName}");
+			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/tokens/{tokenName}");
 			urlBuilder_.Replace("{tokenName}", System.Uri.EscapeDataString(ConvertToString(tokenName, System.Globalization.CultureInfo.InvariantCulture)));
 
 			var client_ = _httpClient;
@@ -943,13 +942,12 @@ namespace WPFApp.Nswag
 		/// <exception cref="ApiException">A server side error occurred.</exception>
 		public virtual async System.Threading.Tasks.Task<string> DeleteUserAsync(string username, System.Threading.CancellationToken cancellationToken)
 		{
+			if (username == null)
+				throw new System.ArgumentNullException("username");
+
 			var urlBuilder_ = new System.Text.StringBuilder();
-			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/users/delete?");
-			if (username != null)
-			{
-				urlBuilder_.Append(System.Uri.EscapeDataString("username") + "=").Append(System.Uri.EscapeDataString(ConvertToString(username, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-			}
-			urlBuilder_.Length--;
+			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/users/{username}");
+			urlBuilder_.Replace("{username}", System.Uri.EscapeDataString(ConvertToString(username, System.Globalization.CultureInfo.InvariantCulture)));
 
 			var client_ = _httpClient;
 			var disposeClient_ = false;
@@ -984,6 +982,96 @@ namespace WPFApp.Nswag
 						if (status_ == 200)
 						{
 							var objectResponse_ = await ReadObjectResponseAsync<string>(response_, headers_, cancellationToken).ConfigureAwait(false);
+							if (objectResponse_.Object == null)
+							{
+								throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+							}
+							return objectResponse_.Object;
+						}
+						else
+						{
+							var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+							throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+						}
+					}
+					finally
+					{
+						if (disposeResponse_)
+							response_.Dispose();
+					}
+				}
+			}
+			finally
+			{
+				if (disposeClient_)
+					client_.Dispose();
+			}
+		}
+
+		/// <summary>
+		/// Gets user by name
+		/// </summary>
+		/// <remarks>
+		/// Gets one user from users collection by it's unique username
+		/// </remarks>
+		/// <returns>User successfully loaded</returns>
+		/// <exception cref="ApiException">A server side error occurred.</exception>
+		public virtual System.Threading.Tasks.Task<UserDto> GetUserByNameAsync(string username)
+		{
+			return GetUserByNameAsync(username, System.Threading.CancellationToken.None);
+		}
+
+		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <summary>
+		/// Gets user by name
+		/// </summary>
+		/// <remarks>
+		/// Gets one user from users collection by it's unique username
+		/// </remarks>
+		/// <returns>User successfully loaded</returns>
+		/// <exception cref="ApiException">A server side error occurred.</exception>
+		public virtual async System.Threading.Tasks.Task<UserDto> GetUserByNameAsync(string username, System.Threading.CancellationToken cancellationToken)
+		{
+			if (username == null)
+				throw new System.ArgumentNullException("username");
+
+			var urlBuilder_ = new System.Text.StringBuilder();
+			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/users/{username}");
+			urlBuilder_.Replace("{username}", System.Uri.EscapeDataString(ConvertToString(username, System.Globalization.CultureInfo.InvariantCulture)));
+
+			var client_ = _httpClient;
+			var disposeClient_ = false;
+			try
+			{
+				using (var request_ = new System.Net.Http.HttpRequestMessage())
+				{
+					request_.Method = new System.Net.Http.HttpMethod("GET");
+					request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+					PrepareRequest(client_, request_, urlBuilder_);
+
+					var url_ = urlBuilder_.ToString();
+					request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+					PrepareRequest(client_, request_, url_);
+
+					var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+					var disposeResponse_ = true;
+					try
+					{
+						var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+						if (response_.Content != null && response_.Content.Headers != null)
+						{
+							foreach (var item_ in response_.Content.Headers)
+								headers_[item_.Key] = item_.Value;
+						}
+
+						ProcessResponse(client_, response_);
+
+						var status_ = (int)response_.StatusCode;
+						if (status_ == 200)
+						{
+							var objectResponse_ = await ReadObjectResponseAsync<UserDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
 							if (objectResponse_.Object == null)
 							{
 								throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1097,96 +1185,6 @@ namespace WPFApp.Nswag
 		}
 
 		/// <summary>
-		/// Gets user by name
-		/// </summary>
-		/// <remarks>
-		/// Gets one user from users collection by it's unique username
-		/// </remarks>
-		/// <returns>User successfully loaded</returns>
-		/// <exception cref="ApiException">A server side error occurred.</exception>
-		public virtual System.Threading.Tasks.Task<UserDto> GetUserByNameAsync(string username)
-		{
-			return GetUserByNameAsync(username, System.Threading.CancellationToken.None);
-		}
-
-		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-		/// <summary>
-		/// Gets user by name
-		/// </summary>
-		/// <remarks>
-		/// Gets one user from users collection by it's unique username
-		/// </remarks>
-		/// <returns>User successfully loaded</returns>
-		/// <exception cref="ApiException">A server side error occurred.</exception>
-		public virtual async System.Threading.Tasks.Task<UserDto> GetUserByNameAsync(string username, System.Threading.CancellationToken cancellationToken)
-		{
-			if (username == null)
-				throw new System.ArgumentNullException("username");
-
-			var urlBuilder_ = new System.Text.StringBuilder();
-			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/users/name={username}");
-			urlBuilder_.Replace("{username}", System.Uri.EscapeDataString(ConvertToString(username, System.Globalization.CultureInfo.InvariantCulture)));
-
-			var client_ = _httpClient;
-			var disposeClient_ = false;
-			try
-			{
-				using (var request_ = new System.Net.Http.HttpRequestMessage())
-				{
-					request_.Method = new System.Net.Http.HttpMethod("GET");
-					request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-					PrepareRequest(client_, request_, urlBuilder_);
-
-					var url_ = urlBuilder_.ToString();
-					request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-					PrepareRequest(client_, request_, url_);
-
-					var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-					var disposeResponse_ = true;
-					try
-					{
-						var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-						if (response_.Content != null && response_.Content.Headers != null)
-						{
-							foreach (var item_ in response_.Content.Headers)
-								headers_[item_.Key] = item_.Value;
-						}
-
-						ProcessResponse(client_, response_);
-
-						var status_ = (int)response_.StatusCode;
-						if (status_ == 200)
-						{
-							var objectResponse_ = await ReadObjectResponseAsync<UserDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
-							if (objectResponse_.Object == null)
-							{
-								throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-							}
-							return objectResponse_.Object;
-						}
-						else
-						{
-							var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-							throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-						}
-					}
-					finally
-					{
-						if (disposeResponse_)
-							response_.Dispose();
-					}
-				}
-			}
-			finally
-			{
-				if (disposeClient_)
-					client_.Dispose();
-			}
-		}
-
-		/// <summary>
 		/// Paginates users collection
 		/// </summary>
 		/// <remarks>
@@ -1217,7 +1215,7 @@ namespace WPFApp.Nswag
 				throw new System.ArgumentNullException("take");
 
 			var urlBuilder_ = new System.Text.StringBuilder();
-			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/users/skip={skip}take={take}");
+			urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/users/{skip}/{take}");
 			urlBuilder_.Replace("{skip}", System.Uri.EscapeDataString(ConvertToString(skip, System.Globalization.CultureInfo.InvariantCulture)));
 			urlBuilder_.Replace("{take}", System.Uri.EscapeDataString(ConvertToString(take, System.Globalization.CultureInfo.InvariantCulture)));
 
