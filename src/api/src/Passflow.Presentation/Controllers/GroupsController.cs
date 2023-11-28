@@ -25,8 +25,7 @@ namespace Passflow.Presentation.Controllers
 
         [SwaggerOperation(
             Summary = "Gets all groups",
-            Description = "Gets all groups",
-            OperationId = nameof(List<GroupDto>)
+            Description = "Gets all groups"
         )]
         [SwaggerResponse(
             StatusCodes.Status200OK,
@@ -34,7 +33,7 @@ namespace Passflow.Presentation.Controllers
             typeof(List<GroupDto>)
         )]
         [HttpGet]
-        public async Task<IActionResult> GetAllgroups()
+        public async Task<IActionResult> GetAllGroupsAsync()
         {
             var groups = (await _context.Groups.ToListAsync()).Adapt<List<GroupDto>>();
 
@@ -45,16 +44,15 @@ namespace Passflow.Presentation.Controllers
 
         [SwaggerOperation(
             Summary = "Gets group by name",
-            Description = "Gets one group from groups collection by it's unique groupname",
-            OperationId = nameof(GroupDto)
+            Description = "Gets one group from groups collection by it's unique groupName"
         )]
         [SwaggerResponse(
             StatusCodes.Status200OK,
             "group successfully loaded",
             typeof(GroupDto)
 		)]
-        [HttpGet("name={groupname}")]
-        public async Task<IActionResult> GetGroupByName([FromRoute] string groupname)
+        [HttpGet("name={groupName}")]
+        public async Task<IActionResult> GetGroupByNameAsync([FromRoute] string groupname)
         {
             var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupname);
 
@@ -94,8 +92,7 @@ namespace Passflow.Presentation.Controllers
 
         [SwaggerOperation(
             Summary = "Updates groups model",
-            Description = "Gets group from groups collection and updates group properties",
-            OperationId = nameof(groupDto)
+            Description = "Gets group from groups collection and updates group properties"
         )]
         [SwaggerResponse(
             StatusCodes.Status200OK,
@@ -103,7 +100,7 @@ namespace Passflow.Presentation.Controllers
             typeof(GroupDto)
         )]
         [HttpPut("update")]
-        public async Task<IActionResult> Updategroup(GroupDto groupDto)
+        public async Task<IActionResult> UpdateGroup(GroupDto groupDto)
         {
             var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupDto.GroupName);
 
@@ -121,8 +118,7 @@ namespace Passflow.Presentation.Controllers
 
         [SwaggerOperation(
             Summary = "Deletes groups model",
-            Description = "Gets group from groups collection and deletes him",
-            OperationId = nameof(GroupDto)
+            Description = "Gets group from groups collection and deletes him"
         )]
         [SwaggerResponse(
             StatusCodes.Status200OK,
@@ -130,18 +126,18 @@ namespace Passflow.Presentation.Controllers
             typeof(string)
         )]
         [HttpDelete("delete")]
-        public async Task<IActionResult> Deletegroup(string groupname)
+        public async Task<IActionResult> DeleteGroupAsync(string groupName)
         {
-            var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupname);
+            var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupName);
 
             if (group is null)
-                throw new GroupNotFoundException($"Group with name {groupname} not found!");
+                throw new GroupNotFoundException($"Group with name {groupName} not found!");
 
             _context.Groups.Remove(group);
             await _context.SaveChangesAsync();
 
 
-            return Ok($"{groupname} successfully deleted!");
+            return Ok($"{groupName} successfully deleted!");
         }
 
 
@@ -157,7 +153,7 @@ namespace Passflow.Presentation.Controllers
             typeof(List<GroupDto>)
         )]
         [HttpGet("skip={skip}take={take}")]
-        public async Task<IActionResult> Paginate([FromRoute] int skip, [FromRoute] int take)
+        public async Task<IActionResult> PaginateGroupsAsync([FromRoute] int skip, [FromRoute] int take)
         {
             var groups = (await _context.Groups.Skip(skip).Take(take).ToListAsync()).Adapt<List<GroupDto>>();
 

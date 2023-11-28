@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Newtonsoft.Json;
 using WPF_app.Dtos;
 using WPF_app.Helpers;
+using WPF_app.Nswag;
 
 namespace WPF_app.Models
 {

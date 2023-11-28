@@ -22,12 +22,12 @@ public class TokensController : BaseApiController
 	    "Token successfully created"
     )]
 	[HttpPost("create")]
-    public async Task<IActionResult> CreateTokenForUser(TokenCreateDto tokenDto, string username)
+    public async Task<IActionResult> CreateTokenForUserAsync(TokenCreateDto tokenDto)
     {
-        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
+        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == GetAuthUserName());
 
         if (user == null)
-            throw new UserNotFoundException($"User with name {username} not found!");
+            throw new UserNotFoundException($"User with name {GetAuthUserName()} not found!");
 
         var token = tokenDto.Adapt<Token>();
         token.UserId = user.Id;
@@ -42,12 +42,12 @@ public class TokensController : BaseApiController
     )]
 
 	[HttpGet]
-    public async Task<IActionResult> GetAllTokensForAuthenticateUser()
+    public async Task<IActionResult> GetAllUserTokensAsync()
     {
-        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == "username");
+        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == User.Identity!.Name);
 
         if (user == null)
-            throw new UserNotFoundException($"User with name {"username"} not found!");
+            throw new UserNotFoundException($"User with name {GetAuthUserName()} not found!");
 
         var tokens = (await _context.Tokens.Where(e => e.UserId == user.Id).ToListAsync()).Adapt<List<TokenDto>>();
 
@@ -59,19 +59,19 @@ public class TokensController : BaseApiController
 	    typeof(TokenDto)
     )]
 	[HttpGet("token-name={tokenName}")]
-    public async Task<IActionResult> GetTokenByName(string tokenname, string username)
+    public async Task<IActionResult> GetTokenByNameAsync(string tokenName)
     {
-        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
+        var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == GetAuthUserName());
 
         if (user is null)
-            throw new UserNotFoundException($"User with name {username} not found!");
+            throw new UserNotFoundException($"User with name {GetAuthUserName()} not found!");
 
         var token = 
-            _context.Tokens.SingleOrDefaultAsync(e => e.Name == tokenname 
+            _context.Tokens.SingleOrDefaultAsync(e => e.Name == tokenName 
             && e.UserId == user.Id);
 
         if (token is null)
-            throw new TokenNotFoundException($"Token with name {tokenname} for user {username} not found!");
+            throw new TokenNotFoundException($"Token with name {tokenName} for user {GetAuthUserName()} not found!");
 
         var resultToken = token.Adapt<TokenDto>();
 

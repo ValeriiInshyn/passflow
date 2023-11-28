@@ -7,4 +7,6 @@ namespace Passflow.Presentation.Controllers;
 [Produces("application/json")]
 public abstract class BaseApiController : ControllerBase
 {
+	protected string GetAuthUserName() => User.Identity!.Name!;
+
 }

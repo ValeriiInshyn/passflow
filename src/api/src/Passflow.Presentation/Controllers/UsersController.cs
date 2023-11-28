@@ -33,7 +33,7 @@ public class UsersController : BaseApiController
     )]
 
     [HttpGet]
-    public async Task<IActionResult> GetAllUsers()
+    public async Task<IActionResult> GetAllUsersAsync()
     {
         var users = (await _context.Users.ToListAsync()).Adapt<List<UserDto>>();
 
@@ -53,7 +53,7 @@ public class UsersController : BaseApiController
         typeof(UserDto)
     )]
     [HttpGet("name={username}")]
-    public async Task<IActionResult> GetUserByName([FromRoute] string username)
+    public async Task<IActionResult> GetUserByNameAsync([FromRoute] string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
 
@@ -75,7 +75,7 @@ public class UsersController : BaseApiController
         typeof(string)
     )]
     [HttpPost("create")]
-    public async Task<IActionResult> CreateUser(UserCreateDto userDto)
+    public async Task<IActionResult> CreateUserAsync(UserCreateDto userDto)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == userDto.UserName);
         if (user is not null)
@@ -98,7 +98,7 @@ public class UsersController : BaseApiController
         typeof(UserDto)
     )]
     [HttpPut("update")]
-    public async Task<IActionResult> UpdateUser(UserDto userDto)
+    public async Task<IActionResult> UpdateUserAsync(UserDto userDto)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == userDto.UserName);
 
@@ -126,7 +126,7 @@ public class UsersController : BaseApiController
         typeof(string)
     )]
     [HttpDelete("delete")]
-    public async Task<IActionResult> DeleteUser(string username)
+    public async Task<IActionResult> DeleteUserAsync(string username)
     {
         var user = await _context.Users.SingleOrDefaultAsync(e => e.UserName == username);
 
@@ -153,7 +153,7 @@ public class UsersController : BaseApiController
         typeof(List<UserDto>)
 	)]
     [HttpGet("skip={skip}take={take}")]
-    public async Task<IActionResult> Paginate([FromRoute]int skip, [FromRoute] int take)
+    public async Task<IActionResult> PaginateUsersAsync([FromRoute]int skip, [FromRoute] int take)
     {
         var users = (await _context.Users.Skip(skip).Take(take).ToListAsync()).Adapt<List<UserDto>>();
 

@@ -1,7 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using WPF_app.Helpers;
+using WPF_app.Nswag;
 using WPF_app.Pages;
+using WPFApp.Nswag;
 
 namespace WPF_app.Models
 {
@@ -36,7 +40,7 @@ namespace WPF_app.Models
 
         public LoginViewModel()
         {
-            LoginCommand = new RelayCommand(Login, CanLogin);
+            LoginCommand = new RelayCommand(LoginAsync, CanLogin);
         }
 
         private bool CanLogin(object parameter)
@@ -45,10 +49,10 @@ namespace WPF_app.Models
             return !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password);
         }
 
-        private void Login(object parameter)
+        private async void LoginAsync(object parameter)
         {
             // Add your authentication logic here
-            if (IsValidUser(Username, Password))
+            if (await IsValidUserAsync(Username, Password))
             {
                 // Navigate to the dashboard view
                 var tokenManagementViewModel = new TokenManagementViewModel();
@@ -64,10 +68,22 @@ namespace WPF_app.Models
             }
         }
 
-        private bool IsValidUser(string username, string password)
+        private async Task<bool> IsValidUserAsync(string username, string password)
         {
             // Add your actual user validation logic here
-            return username == "admin" && password == "password";
+            try
+            {
+	            await ApiClient.Instance.LoginAsync(new LoginDto
+	            {
+		            UserName = username,
+		            Password = password
+	            });
+	            return true;
+            }
+			catch (Exception e)
+			{
+				return false;
+			}
         }
     }
 }

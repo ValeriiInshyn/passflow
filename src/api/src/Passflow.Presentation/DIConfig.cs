@@ -9,6 +9,7 @@ using Passflow.Infrastructure.Services;
 using Serilog;
 using System.Reflection;
 using Passflow.Application.Services;
+using Passflow.Presentation.OperationFilters;
 
 namespace Passflow.Presentation;
 
@@ -66,7 +67,7 @@ public static class DIConfig
 
 			// options.SchemaFilter<EnumSchemaFilter>();
 			options.UseInlineDefinitionsForEnums();
-
+			options.OperationFilter<MethodNameAsOperationIdFilter>();
 			options.SupportNonNullableReferenceTypes(); // Sets Nullable flags appropriately.              
 			options.UseAllOfForInheritance(); // Allows $ref objects to be nullable
 		});

@@ -22,5 +22,10 @@ namespace WPF_app.Pages
                 viewModel.Password = (sender as PasswordBox)?.Password;
             }
         }
-    }
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+	}
 }
